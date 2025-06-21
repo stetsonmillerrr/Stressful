@@ -1,0 +1,28 @@
+{
+  "name": "Stressful",
+  "version": "1.0.0",
+  "description": "A web app for DNS and Reverse IP lookup functionalities.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "dns": "^0.2.2"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/nettools.git"
+  },
+  "keywords": [
+    "Node.js",
+    "DNS",
+    "IP Lookup",
+    "Network Tools"
+  ],
+  "author": "Nobody",
+  "license": "MIT"
+}
