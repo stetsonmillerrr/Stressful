@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stressful Panel</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+    :root {
+      --primary: #00ffff;
+      --bg: #000;
+      --bg-dark: #111;
+      --text: #ccc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden; /* Prevent scrolling */
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    header {
+      background: var(--bg-dark);
+      padding: 0.8rem;
+      text-align: center;
+      font-size: 1.5rem;
+      color: var(--primary);
+      box-shadow: 0 0 15px var(--primary);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-around;
+      background: var(--bg-dark);
+      padding: 1rem 0;
+      border-bottom: 2px solid var(--primary); /* Tab separator */
+      border-radius: 10px 10px 0 0;
+      box-shadow: 0 3px 15px rgba(0, 255, 255, 0.1);
+    }
+
+    nav button {
+      flex: 1;
+      padding: 0.8rem;
+      border: none;
+      background: none;
+      color: var(--text);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 8px;
+    }
+
+    nav button.active,
+    nav button:hover {
+      background: var(--primary);
+      color: #000;
+      font-weight: bold;
+      box-shadow: 0 0 10px var(--primary);
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .tab {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      display: none;
+      padding: 1rem;
+      flex-grow: 1;
+    }
+
+    .tab.active {
+      display: block;
+      animation: fadein 0.4s ease;
+    }
+
+    .panel {
+      background: #111;
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem;
+      box-shadow: 0 0 15px #00ffff55;
+    }
+
+    .panel h2 {
+      margin-bottom: 1rem;
+      color: var(--primary);
+      font-size: 1.3rem;
+    }
+
+    .input-group {
+      margin-bottom: 1rem;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 0.6rem;
+      background: #1a1a1a;
+      border: none;
+      color: #fff;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: linear-gradient(45deg, #00ffff, #0055ff);
+      border: none;
+      color: #000;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      background: linear-gradient(45deg, #0055ff, #00ffff);
+    }
+
+    .terminal {
+      background: #000;
+      color: #00ff00;
+      padding: 0.8rem;
+      margin-top: 1rem;
+      font-family: monospace;
+      border-left: 4px solid var(--primary);
+      max-height: 200px;
+      overflow-y: auto;
+      border-radius: 6px;
+    }
+
+    .tools-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .tools-grid .panel {
+      flex: 1 1 30%;
+      min-width: 250px;
+      max-width: 320px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      color: #555;
+    }
+
+    @keyframes fadein {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    /* For mobile, adjust layout */
+    @media (max-width: 768px) {
+      .panel {
+        margin: 0.5rem;
+      }
+
+      .tools-grid .panel {
+        flex: 1 1 100%;
+        max-width: 100%;
+      }
+
+      nav {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>Stressful Panel</header>
+  <nav>
+    <button class="active" onclick="switchTab('dashboard', this)">Dashboard</button>
+    <button onclick="switchTab('tools', this)">Tools</button>
+    <button onclick="switchTab('logs', this)">Logs</button>
+    <button onclick="switchTab('settings', this)">Settings</button>
+  </nav>
+
+  <div class="container">
+    <!-- Tools Tab -->
+    <div class="tab" id="tools">
+      <div class="tools-grid">
+        <!-- Reverse IP Lookup -->
+        <div class="panel">
+          <h2>Reverse IP Lookup</h2>
+          <div class="input-group"><input id="revip" placeholder="Enter IP or Host" /></div>
+          <button class="btn" onclick="reverseIP()">Lookup</button>
+          <div class="terminal" id="revResult"></div>
+        </div>
+
+        <!-- DNS Lookup -->
+        <div class="panel">
+          <h2>DNS Lookup</h2>
+          <div class="input-group"><input id="dnslookup" placeholder="Enter domain" /></div>
+          <button class="btn" onclick="dnsLookup()">Query</button>
+          <div class="terminal" id="dnsResult"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logs Tab -->
+    <div class="tab" id="logs">
+      <div class="panel" style="max-width: 700px; margin: auto;">
+        <h2>Log History</h2>
+        <div class="terminal" id="logBox">[ No logs yet ]</div>
+      </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div class="tab" id="settings">
+      <div class="panel" style="max-width: 700px; margin: auto;">
+        <h2>Settings</h2>
+        <div class="terminal">Theme: Dark Neon<br>Auto-Log: Enabled</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2025 Stressful Panel - Simulated only.</footer>
+
+  <script>
+    // Tab switching logic
+    function switchTab(id, el) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function log(msg, boxId) {
+      const box = document.getElementById(boxId);
+      box.innerHTML += `<div>> ${msg}</div>`;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function reverseIP() {
+      const input = document.getElementById('revip').value;
+      log(`Performing reverse IP lookup on ${input}...`, 'revResult');
+      // Send request to backend for reverse IP lookup
+      fetch(`/reverse-ip/${input}`)
+        .then(res => res.json())
+        .then(data => {
+          log(`Reverse IP result for ${input}: ${data.hostname}`, 'revResult');
+        })
+        .catch(err => log(`Error: ${err.message}`, 'revResult'));
+    }
+
+    function dnsLookup() {
+      const input = document.getElementById('dnslookup').value;
+      log(`Querying DNS for ${input}...`, 'dnsResult');
+      // Send request to backend for DNS lookup
+      fetch(`/dns-lookup/${input}`)
+        .then(res => res.json())
+        .then(data => {
+          log(`DNS result for ${input}: ${data}`, 'dnsResult');
+        })
+        .catch(err => log(`Error: ${err.message}`, 'dnsResult'));
+    }
+  </script>
+</body>
+</html>
